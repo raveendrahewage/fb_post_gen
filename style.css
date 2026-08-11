@@ -48,6 +48,8 @@ code{background:#e9ecef;padding:2px 5px;border-radius:4px}
 .watermark.bottom-left{left:3%;bottom:2.5%}
 .watermark.top-right{right:3%;top:2.5%}
 .watermark.top-left{left:3%;top:2.5%}
+.watermark.top-center{left:50%;top:2.5%;transform:translateX(-50%)}
+.watermark.bottom-center{left:50%;bottom:2.5%;transform:translateX(-50%)}
 .watermark.center{left:50%;top:50%;transform:translate(-50%,-50%)}
 .watermark.hidden{display:none}
 @media(max-width:600px){.watermarkHeader{align-items:flex-start;flex-direction:column}.watermarkDefault{display:none}}
