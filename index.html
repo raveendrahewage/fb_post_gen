@@ -1,161 +1,163 @@
 <!doctype html>
 <html lang="si">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Facebook Post Generator v11</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=Maname&family=Noto+Sans+Sinhala:wght@400;500;600;700;800&family=Noto+Sans:wght@400;500;600;700;800&family=Noto+Serif+Sinhala:wght@400;500;600;700;800&family=Noto+Serif:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Facebook Post Generator v11</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=Maname&family=Noto+Sans+Sinhala:wght@400;500;600;700;800&family=Noto+Sans:wght@400;500;600;700;800&family=Noto+Serif+Sinhala:wght@400;500;600;700;800&family=Noto+Serif:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
+
 <body>
-<main class="app">
-  <section class="controls">
-    <h1>Facebook Post Generator</h1>
-    <p>Use <b>[red]</b>, <b>[green]</b>, <b>[blue]</b>, etc. to color text.</p>
+  <main class="app">
+    <section class="controls">
+      <h1>Facebook Post Generator</h1>
+      <p>Use <b>[red]</b>, <b>[green]</b>, <b>[blue]</b>, etc. to color text.</p>
 
-    <label for="text">Post text</label>
-    <textarea id="text" spellcheck="false">[red]AI[/red] වලින් වැඩ කර කර ඉඳලා
-[red]Interview[/red] එකකට ගියාම
-Docker [green]Containerization[/green]
-කරන්නෙ කොහොමද අහුවම
-[blue]දෙවියන්ගෙන්[/blue]
-කියලා කියවුණා 🙂:
-[red]අනේ මමයි වාසනාවන්තයා[/red]
-අරගෙන ගෝසයියම 🙏.</textarea>
+      <label for="text">Post text</label>
+      <textarea id="text" spellcheck="false"></textarea>
 
-    <div class="grid">
-      <div>
-        <label for="alignment">Text alignment</label>
-        <select id="alignment">
-          <option value="center">Center</option>
-          <option value="left">Left</option>
-          <option value="right">Right</option>
-        </select>
-      </div>
-      <div>
-        <label for="font">Font</label>
-        <select id="font">
-          <option value="noto-sans">Noto Sans Sinhala / Noto Sans</option>
-          <option value="noto-serif">Noto Serif Sinhala / Noto Serif</option>
-          <option value="abhaya">Abhaya Libre</option>
-          <option value="maname">Maname</option>
-          <option value="poppins">Poppins + Noto Sans Sinhala</option>
-          <option value="roboto">Roboto + Noto Sans Sinhala</option>
-          <option value="inter">Inter + Noto Sans Sinhala</option>
-        </select>
-      </div>
-      <div>
-        <label for="size">Maximum font size <span id="sizeOut">48px</span></label>
-        <input id="size" type="range" min="20" max="100" value="48">
-      </div>
-      <div>
-        <label for="line">Line spacing <span id="lineOut">1.25</span></label>
-        <input id="line" type="range" min="1" max="1.8" step=".05" value="1.25">
-      </div>
-    </div>
-
-    <div class="fitInfo">
-      <span>Automatic fitting: <b>ON</b></span>
-      <span id="actualSize">Actual: 48px</span>
-    </div>
-
-    <label for="postSize">PNG / Facebook post size</label>
-    <select id="postSize">
-      <option value="1080x1080">Square — 1080 × 1080 (1:1)</option>
-      <option value="1080x1350">Portrait — 1080 × 1350 (4:5)</option>
-      <option value="1200x630">Landscape — 1200 × 630 (1.91:1)</option>
-      <option value="1200x1200">Large Square — 1200 × 1200 (1:1)</option>
-      <option value="custom">Custom size…</option>
-    </select>
-
-    <div id="customSize" class="grid custom hidden">
-      <div>
-        <label for="customWidth">Width (px)</label>
-        <input id="customWidth" type="number" min="200" max="5000" value="1080">
-      </div>
-      <div>
-        <label for="customHeight">Height (px)</label>
-        <input id="customHeight" type="number" min="200" max="5000" value="1080">
-      </div>
-    </div>
-
-    <div class="grid">
-      <div>
-        <label for="red">Default red</label>
-        <input id="red" type="color" value="#e53935">
-      </div>
-      <div>
-        <label for="black">Default text</label>
-        <input id="black" type="color" value="#111111">
-      </div>
-    </div>
-
-    <label for="bg">Background</label>
-    <input id="bg" type="color" value="#ffffff">
-
-    <div class="watermarkBox">
-      <div class="watermarkHeader">
-        <label class="watermarkToggle"><input id="watermarkEnabled" type="checkbox" checked> Add watermark</label>
-        <span class="watermarkDefault">Default: Raveendra Hewage</span>
-      </div>
       <div class="grid">
         <div>
-          <label for="watermarkText">Watermark text</label>
-          <input id="watermarkText" type="text" value="Raveendra Hewage" maxlength="80">
-        </div>
-        <div>
-          <label for="watermarkPosition">Position</label>
-          <select id="watermarkPosition">
-            <option value="bottom-right">Bottom right</option>
-            <option value="bottom-left">Bottom left</option>
-            <option value="top-right">Top right</option>
-            <option value="top-left">Top left</option>
-            <option value="top-center">Top center</option>
-            <option value="bottom-center">Bottom center</option>
+          <label for="alignment">Text alignment</label>
+          <select id="alignment">
             <option value="center">Center</option>
+            <option value="left">Left</option>
+            <option value="right">Right</option>
           </select>
         </div>
         <div>
-          <label for="watermarkSize">Size <span id="watermarkSizeOut">18px</span></label>
-          <input id="watermarkSize" type="range" min="8" max="60" value="18">
+          <label for="font">Font</label>
+          <select id="font">
+            <option value="noto-sans">Noto Sans Sinhala / Noto Sans</option>
+            <option value="noto-serif">Noto Serif Sinhala / Noto Serif</option>
+            <option value="abhaya">Abhaya Libre</option>
+            <option value="maname">Maname</option>
+            <option value="poppins">Poppins + Noto Sans Sinhala</option>
+            <option value="roboto">Roboto + Noto Sans Sinhala</option>
+            <option value="inter">Inter + Noto Sans Sinhala</option>
+          </select>
         </div>
         <div>
-          <label for="watermarkOpacity">Opacity <span id="watermarkOpacityOut">55%</span></label>
-          <input id="watermarkOpacity" type="range" min="10" max="100" value="55">
+          <label for="size">Maximum font size <span id="sizeOut">48px</span></label>
+          <input id="size" type="range" min="20" max="100" value="48">
+        </div>
+        <div>
+          <label for="line">Line spacing <span id="lineOut">1.25</span></label>
+          <input id="line" type="range" min="1" max="1.8" step=".05" value="1.25">
         </div>
       </div>
-    </div>
 
-    <div class="buttons">
-      <button id="example">Load Example</button>
-      <button id="clear">Clear</button>
-      <button id="download" class="primary">Download PNG (Preview)</button>
-    </div>
+      <div class="fitInfo">
+        <span>Automatic fitting: <b>ON</b></span>
+        <span id="actualSize">Actual: 48px</span>
+      </div>
 
-    <div class="help">
-      <b>Text tags</b><br>
-      <code>[red]Red[/red]</code>
-      <code>[green]Green[/green]</code>
-      <code>[#ff6600]Orange[/#ff6600]</code><br>
-      You can also use <code>[color=#7b1fa2]Purple[/color]</code>.<br>
-      Invalid colors automatically use the default red.<br><br>
-      Other formatting: <code>[bold]Bold[/bold]</code>,
-      <code>[italic]Italic[/italic]</code>,
-      <code>[underline]Underline[/underline]</code>.<br>
-      These tags can be combined, so different parts of the same line can have different formatting.<br><br>
-      <b>Fonts:</b> Choose a Sinhala-capable font or an English font with Sinhala fallback.<br><br><b>Automatic font sizing:</b> the selected size is the maximum.
-      If the text is too long, the app automatically reduces the font until everything fits.
-    </div>
-  </section>
+      <label for="postSize">PNG / Facebook post size</label>
+      <select id="postSize">
+        <option value="1080x1080">Square — 1080 × 1080 (1:1)</option>
+        <option value="1080x1350">Portrait — 1080 × 1350 (4:5)</option>
+        <option value="1200x630">Landscape — 1200 × 630 (1.91:1)</option>
+        <option value="1200x1200">Large Square — 1200 × 1200 (1:1)</option>
+        <option value="custom">Custom size…</option>
+      </select>
 
-  <section class="previewWrap">
-    <div class="label" id="previewLabel">1080 × 1080 PREVIEW</div>
-    <div id="post"><div id="preview"></div><div id="watermark" class="watermark bottom-right" aria-hidden="true"></div></div>
-  </section>
-</main>
-<script src="script.js"></script>
+      <div id="customSize" class="grid custom hidden">
+        <div>
+          <label for="customWidth">Width (px)</label>
+          <input id="customWidth" type="number" min="200" max="5000" value="1080">
+        </div>
+        <div>
+          <label for="customHeight">Height (px)</label>
+          <input id="customHeight" type="number" min="200" max="5000" value="1080">
+        </div>
+      </div>
+
+      <div class="grid">
+        <div>
+          <label for="red">Default red</label>
+          <input id="red" type="color" value="#e53935">
+        </div>
+        <div>
+          <label for="black">Default text</label>
+          <input id="black" type="color" value="#111111">
+        </div>
+      </div>
+
+      <label for="bg">Background</label>
+      <input id="bg" type="color" value="#ffffff">
+
+      <div class="watermarkBox">
+        <div class="watermarkHeader">
+          <label class="watermarkToggle"><input id="watermarkEnabled" type="checkbox" checked> Add watermark</label>
+          <span class="watermarkDefault">Default: RAVEENDRA</span>
+        </div>
+        <div class="grid">
+          <div>
+            <label for="watermarkText">Watermark text</label>
+            <input id="watermarkText" type="text" value="RAVEENDRA" maxlength="80">
+          </div>
+          <div>
+            <label for="watermarkPosition">Position</label>
+            <select id="watermarkPosition">
+              <option value="bottom-right">Bottom right</option>
+              <option value="bottom-left">Bottom left</option>
+              <option value="top-right">Top right</option>
+              <option value="top-left">Top left</option>
+              <option value="top-center">Top center</option>
+              <option value="bottom-center">Bottom center</option>
+              <option value="center">Center</option>
+            </select>
+          </div>
+          <div>
+            <label for="watermarkSize">Size <span id="watermarkSizeOut">18px</span></label>
+            <input id="watermarkSize" type="range" min="8" max="60" value="18">
+          </div>
+          <div>
+            <label for="watermarkOpacity">Opacity <span id="watermarkOpacityOut">55%</span></label>
+            <input id="watermarkOpacity" type="range" min="10" max="100" value="55">
+          </div>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button id="example">Load Example</button>
+        <button id="clear">Clear</button>
+        <button id="download" class="primary">Download PNG</button>
+      </div>
+
+      <div class="help">
+        <b>Text tags</b><br>
+        <code>[red]Red[/red]</code>
+        <code>[green]Green[/green]</code>
+        <code>[#ff6600]Orange[/#ff6600]</code><br>
+        You can also use <code>[color=#7b1fa2]Purple[/color]</code>.<br>
+        Invalid colors automatically use the default red.<br><br>
+        Other formatting: <code>[bold]Bold[/bold]</code>,
+        <code>[italic]Italic[/italic]</code>,
+        <code>[underline]Underline[/underline]</code>.<br>
+        These tags can be combined, so different parts of the same line can have different formatting.<br><br>
+        <b>Fonts:</b> Choose a Sinhala-capable font or an English font with Sinhala fallback.<br><br><b>Automatic font
+          sizing:</b> the selected size is the maximum.
+        If the text is too long, the app automatically reduces the font until everything fits.
+      </div>
+    </section>
+
+    <section class="previewWrap">
+      <div class="label" id="previewLabel">1080 × 1080 PREVIEW</div>
+      <div id="post">
+        <div id="preview"></div>
+        <div id="watermark" class="watermark bottom-right" aria-hidden="true"></div>
+      </div>
+    </section>
+  </main>
+  <script src="script.js"></script>
 </body>
+
 </html>

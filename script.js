@@ -252,7 +252,13 @@ function render() {
   const d = getPostDimensions();
 
   post.style.aspectRatio = `${d.width} / ${d.height}`;
-  post.style.background = bg.value;
+  // Keep the selected color on the actual export target.
+  // Use backgroundColor (not the shorthand) so html2canvas reads the exact value.
+  const selectedBackground = normalizeColor(bg.value) || "#ffffff";
+  post.style.setProperty("--post-bg", selectedBackground);
+  post.style.setProperty("background-color", selectedBackground, "important");
+  post.style.setProperty("background-image", "none", "important");
+  preview.style.backgroundColor = "transparent";
 
   preview.innerHTML = cssPreviewHTML();
   preview.style.color = normalizeColor(black.value) || "#000000";
@@ -484,31 +490,59 @@ async function downloadPNG() {
     return;
   }
 
-  // Capture the actual preview DOM instead of rebuilding the text.
-  const scale = targetWidth / rect.width;
+  // Always use the exact color currently selected in the Background control.
+  // We also write it to the post immediately before capture so there is no
+  // chance of html2canvas using a stale/cloned background value.
+  const selectedBackground = normalizeColor(bg.value) || "#ffffff";
+  post.style.setProperty("--post-bg", selectedBackground);
+  post.style.setProperty("background-color", selectedBackground, "important");
+  post.style.setProperty("background-image", "none", "important");
 
-  const canvas = await html2canvas(post, {
-    backgroundColor: bg.value,
-    scale: scale,
+  const captureWidth = Math.round(rect.width);
+  const captureHeight = Math.round(rect.height);
+
+  // Capture the preview WITHOUT its background. The final PNG background is
+  // painted separately below using the exact color selected by the user.
+  // This avoids browser/html2canvas color blending or color-management
+  // differences that can make a white background look gray/dark.
+  const captured = await html2canvas(post, {
+    backgroundColor: null,
+    scale: 1,
     useCORS: true,
     allowTaint: false,
     logging: false,
     imageTimeout: 15000,
-    width: Math.round(rect.width),
-    height: Math.round(rect.height),
+    width: captureWidth,
+    height: captureHeight,
+    x: 0,
+    y: 0,
     windowWidth: document.documentElement.clientWidth,
-    windowHeight: document.documentElement.clientHeight
+    windowHeight: document.documentElement.clientHeight,
+    onclone: (clonedDoc) => {
+      const clonedPost = clonedDoc.getElementById("post");
+      if (clonedPost) {
+        clonedPost.style.setProperty("background", "transparent", "important");
+        clonedPost.style.setProperty("background-color", "transparent", "important");
+        clonedPost.style.setProperty("background-image", "none", "important");
+        clonedPost.style.setProperty("box-shadow", "none", "important");
+      }
+    }
   });
 
-  let outputCanvas = canvas;
+  // Always create the final output ourselves. Fill it first with the exact
+  // selected background, then draw the captured preview on top. This makes
+  // the PNG background deterministic even if the browser/html2canvas treats
+  // any pixels as transparent.
+  const outputCanvas = document.createElement("canvas");
+  outputCanvas.width = targetWidth;
+  outputCanvas.height = targetHeight;
 
-  if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
-    outputCanvas = document.createElement("canvas");
-    outputCanvas.width = targetWidth;
-    outputCanvas.height = targetHeight;
-    const ctx = outputCanvas.getContext("2d");
-    ctx.drawImage(canvas, 0, 0, targetWidth, targetHeight);
-  }
+  const ctx = outputCanvas.getContext("2d", {alpha: false});
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.fillStyle = selectedBackground;
+  ctx.fillRect(0, 0, targetWidth, targetHeight);
+  ctx.drawImage(captured, 0, 0, targetWidth, targetHeight);
 
   const a = document.createElement("a");
   a.download = `facebook-post-${targetWidth}x${targetHeight}.png`;
