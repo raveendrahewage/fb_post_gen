@@ -14,6 +14,12 @@ const postSize = $("postSize");
 const customSize = $("customSize");
 const customWidth = $("customWidth");
 const customHeight = $("customHeight");
+const watermarkEnabled = $("watermarkEnabled");
+const watermarkText = $("watermarkText");
+const watermarkPosition = $("watermarkPosition");
+const watermarkSize = $("watermarkSize");
+const watermarkOpacity = $("watermarkOpacity");
+const watermark = $("watermark");
 
 let actualFontSize = Number(size.value);
 
@@ -227,8 +233,21 @@ function calculateAutoFontSize() {
   return Math.floor(low * 10) / 10;
 }
 
+function updateWatermark() {
+  const enabled = watermarkEnabled.checked && watermarkText.value.trim();
+  watermark.textContent = enabled ? watermarkText.value.trim() : "";
+  watermark.className = `watermark ${watermarkPosition.value}${enabled ? "" : " hidden"}`;
+  watermark.style.fontSize = `${Number(watermarkSize.value)}px`;
+  watermark.style.opacity = Number(watermarkOpacity.value) / 100;
+  watermark.style.fontFamily = getFontFamily();
+
+  $("watermarkSizeOut").textContent = `${watermarkSize.value}px`;
+  $("watermarkOpacityOut").textContent = `${watermarkOpacity.value}%`;
+}
+
 function render() {
   updateCustomVisibility();
+  updateWatermark();
 
   const d = getPostDimensions();
 
@@ -258,10 +277,12 @@ function render() {
 
 [
   text, font, alignment, size, line, red, black, bg,
-  postSize, customWidth, customHeight
+  postSize, customWidth, customHeight, watermarkEnabled, watermarkText,
+  watermarkPosition, watermarkSize, watermarkOpacity
 ].forEach(el => el.addEventListener("input", render));
 
 postSize.addEventListener("change", render);
+watermarkPosition.addEventListener("change", render);
 
 $("example").onclick = () => {
   text.value = `[red]IT Job[/red] අහු ගැහෙන්නෙ
