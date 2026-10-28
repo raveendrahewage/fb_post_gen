@@ -16,6 +16,7 @@
 
 <body>
   <main class="app">
+    <!-- Controls Column (Left on Desktop, Below Preview on Mobile) -->
     <section class="controls" id="controlsSection">
       <div class="appHeader">
         <h1>Facebook Post Generator</h1>
@@ -72,19 +73,19 @@
           </select>
         </div>
         <div>
-          <label for="font">Font</label>
+          <label for="font">Font family</label>
           <select id="font">
-            <option value="noto-sans">Noto Sans Sinhala / Noto Sans</option>
-            <option value="noto-serif">Noto Serif Sinhala / Noto Serif</option>
+            <option value="noto-sans">Noto Sans Sinhala</option>
+            <option value="noto-serif">Noto Serif Sinhala</option>
             <option value="abhaya">Abhaya Libre</option>
             <option value="maname">Maname</option>
-            <option value="poppins">Poppins + Noto Sans Sinhala</option>
-            <option value="roboto">Roboto + Noto Sans Sinhala</option>
-            <option value="inter">Inter + Noto Sans Sinhala</option>
+            <option value="poppins">Poppins + Sinhala</option>
+            <option value="roboto">Roboto + Sinhala</option>
+            <option value="inter">Inter + Sinhala</option>
           </select>
         </div>
         <div>
-          <label for="size">Maximum font size <span id="sizeOut">48px</span></label>
+          <label for="size">Max font size <span id="sizeOut">48px</span></label>
           <input id="size" type="range" min="20" max="100" value="48">
         </div>
         <div>
@@ -98,10 +99,10 @@
         <span id="actualSize">Actual: 48px</span>
       </div>
 
-      <label for="postSize">PNG / Facebook post size</label>
+      <label for="postSize">Post dimensions / Aspect ratio</label>
       <select id="postSize">
         <option value="1080x1080">Square — 1080 × 1080 (1:1)</option>
-        <option value="1080x1350">Portrait — 1080 × 1350 (4:5)</option>
+        <option value="1080x1350">Portrait — 1080 × 1350 (4:5 Feed Default)</option>
         <option value="1080x1920">Story / Reel — 1080 × 1920 (9:16)</option>
         <option value="1200x630">Landscape — 1200 × 630 (1.91:1)</option>
         <option value="1200x1200">Large Square — 1200 × 1200 (1:1)</option>
@@ -130,7 +131,7 @@
         </div>
       </div>
 
-      <!-- Enhanced Background Section -->
+      <!-- Enhanced Background Section with Color & Swatches -->
       <div class="bgSection">
         <label for="bg">Background color</label>
         <div class="bgRow">
@@ -269,7 +270,7 @@
         <button id="download" class="primary" type="button">⬇️ Save / Download Image</button>
       </div>
 
-      <!-- Drafts & History Bar -->
+      <!-- Drafts Bar -->
       <div class="draftsBar">
         <button type="button" id="saveDraftBtn">💾 Save Draft</button>
         <select id="draftsSelect">
@@ -278,28 +279,17 @@
       </div>
 
       <div class="help">
-        <b>Text tags</b><br>
-        <code>[red]Red[/red]</code>
-        <code>[green]Green[/green]</code>
-        <code>[#ff6600]Orange[/#ff6600]</code><br>
-        You can also use <code>[color=#7b1fa2]Purple[/color]</code>.<br>
-        Invalid colors automatically use the highlight color.<br><br>
-        Other formatting: <code>[bold]Bold[/bold]</code>,
-        <code>[italic]Italic[/italic]</code>,
-        <code>[underline]Underline[/underline]</code>.<br>
-        These tags can be combined, so different parts of the same line can have different formatting.<br><br>
-        <b>Fonts:</b> Choose a Sinhala-capable font or an English font with Sinhala fallback.<br><br>
-        <b>Automatic font sizing:</b> The selected size is the maximum. If the text is too long, the font automatically scales down to fit.
+        <b>Formatting help:</b> Use <code>[red]word[/red]</code>, <code>[#ff9800]orange[/#ff9800]</code>, <code>[bold]bold[/bold]</code>, <code>[italic]italic[/italic]</code>, or <code>[underline]underline[/underline]</code>.
       </div>
     </section>
 
-    <!-- Preview Section -->
+    <!-- Preview Section (Right on Desktop, Top on Mobile) -->
     <section class="previewWrap" id="previewSection">
       <div class="label" id="previewLabel">1080 × 1080 PREVIEW</div>
       <div id="post">
         <div id="postBgLayer" class="postBgLayer"></div>
         <div id="postOverlayLayer" class="postOverlayLayer"></div>
-        
+
         <div id="branding" class="branding hidden">
           <img id="brandingAvatar" class="brandingAvatar hidden" alt="Page Logo">
           <div class="brandingInfo">
@@ -318,13 +308,6 @@
       </div>
     </section>
   </main>
-
-  <!-- Mobile Sticky Navigation Bar -->
-  <div class="mobileStickyBar" id="mobileStickyBar">
-    <button type="button" id="mobileTabEditor" class="active">✏️ Edit</button>
-    <button type="button" id="mobileTabPreview">👁️ Preview</button>
-    <button type="button" id="mobileSaveBtn" class="primary">⬇️ Save</button>
-  </div>
 
   <!-- Save / Share Modal (Mobile & iPhone Support) -->
   <div id="saveModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">

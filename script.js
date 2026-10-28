@@ -58,10 +58,6 @@ const download = $("download");
 const saveDraftBtn = $("saveDraftBtn");
 const draftsSelect = $("draftsSelect");
 
-// Mobile Elements
-const mobileTabEditor = $("mobileTabEditor");
-const mobileTabPreview = $("mobileTabPreview");
-const mobileSaveBtn = $("mobileSaveBtn");
 
 // Save Modal Elements
 const saveModal = $("saveModal");
@@ -131,12 +127,10 @@ function normalizeColor(value) {
   const lower = v.toLowerCase();
   if (NAMED_COLORS[lower]) return NAMED_COLORS[lower];
 
-  // #RGB, #RGBA, #RRGGBB, #RRGGBBAA
   if (/^#[0-9a-f]{3,4}$/i.test(v) || /^#[0-9a-f]{6}([0-9a-f]{2})?$/i.test(v)) {
     return v;
   }
 
-  // rgb()/rgba()/hsl()/hsla()
   if (/^(rgb|rgba|hsl|hsla|hwb|lab|lch|oklch|oklab|color)\(/i.test(v)) {
     return v;
   }
@@ -164,9 +158,6 @@ function updateCustomVisibility() {
   customSize.classList.toggle("hidden", postSize.value !== "custom");
 }
 
-/*
- * Line Parser with Nested Tags Support
- */
 function parseLine(lineText) {
   const baseStyle = {
     color: normalizeColor(black.value) || "#000000",
@@ -242,7 +233,7 @@ function parseLine(lineText) {
 
 function cssPreviewHTML() {
   if (!text.value.trim()) {
-    return '<span class="line" style="opacity:0.4; font-weight:400; font-style:italic;">(Enter your post text here)</span>';
+    return '<span class="line" style="opacity:0.35; font-weight:400; font-style:italic;">(Enter post text)</span>';
   }
 
   return text.value.split("\n").map(lineText => {
@@ -262,7 +253,7 @@ function cssPreviewHTML() {
 
 function calculateAutoFontSize() {
   const maxSize = Number(size.value);
-  const minSize = 12;
+  const minSize = 10;
 
   const availableWidth = preview.clientWidth;
   const availableHeight = preview.clientHeight;
@@ -318,7 +309,6 @@ function updateWatermark() {
   watermark.style.opacity = Number(watermarkOpacity.value) / 100;
   watermark.style.fontFamily = getFontFamily();
 
-  // Watermark text color matches post background contrast
   const isDarkBg = isCurrentBgDark();
   watermark.style.color = isDarkBg ? "#ffffff" : "#111111";
 
@@ -345,13 +335,11 @@ function updateBranding() {
 
   brandingBadge.classList.toggle("hidden", !brandVerified.checked);
 
-  // Position at top or bottom
   const atBottom = brandPositionBottom.checked;
   branding.classList.toggle("at-bottom", atBottom);
   post.classList.toggle("has-branding-bottom", atBottom);
   post.classList.toggle("has-branding-top", !atBottom);
 
-  // Avatar Logo
   if (brandAvatarData) {
     brandingAvatar.src = brandAvatarData;
     brandingAvatar.classList.remove("hidden");
@@ -366,7 +354,6 @@ function updateBranding() {
     removeBrandAvatar.classList.add("hidden");
   }
 
-  // Branding Text Color
   if (brandTextColor.value === "auto") {
     branding.style.color = isCurrentBgDark() ? "#ffffff" : "#0f172a";
   } else {
@@ -408,7 +395,6 @@ function render() {
   const d = getPostDimensions();
   post.style.aspectRatio = `${d.width} / ${d.height}`;
 
-  // Apply Background Color / Gradient directly
   const selectedBackground = normalizeColor(bg.value) || "#ffffff";
   const solidSwatch = document.querySelector(".swatchSolid");
   if (solidSwatch) {
@@ -431,7 +417,6 @@ function render() {
   preview.style.lineHeight = line.value;
   preview.style.fontSize = Number(size.value) + "px";
 
-  // Character counter
   charCount.textContent = `${text.value.length} characters`;
 
   requestAnimationFrame(() => {
@@ -449,6 +434,7 @@ function render() {
 
   debouncedAutoSave();
 }
+
 
 /*
  * Quick Formatting Toolbar Helpers
@@ -702,22 +688,6 @@ function showToast(msg) {
   }, 2500);
 }
 
-/*
- * Mobile Navigation Bar Tabs
- */
-mobileTabEditor.onclick = () => {
-  mobileTabEditor.classList.add("active");
-  mobileTabPreview.classList.remove("active");
-  $("controlsSection").scrollIntoView({ behavior: "smooth" });
-};
-
-mobileTabPreview.onclick = () => {
-  mobileTabPreview.classList.add("active");
-  mobileTabEditor.classList.remove("active");
-  $("previewSection").scrollIntoView({ behavior: "smooth" });
-};
-
-mobileSaveBtn.onclick = () => downloadPNG();
 
 /*
  * High-Resolution Canvas Rendering & Mobile/iOS Export Engine
@@ -740,10 +710,8 @@ async function generateHighResCanvas() {
     throw new Error("The preview is not ready yet.");
   }
 
-  // Calculate sharp scaling factor so mobile doesn't produce blurry output
   const captureScale = Math.max(1, targetWidth / rect.width);
 
-  // Capture text, branding & watermark with transparent background
   const captured = await html2canvas(post, {
     backgroundColor: null,
     scale: captureScale,
@@ -773,7 +741,6 @@ async function generateHighResCanvas() {
     }
   });
 
-  // Construct Final High-DPI Output Canvas
   const outputCanvas = document.createElement("canvas");
   outputCanvas.width = targetWidth;
   outputCanvas.height = targetHeight;
@@ -784,7 +751,6 @@ async function generateHighResCanvas() {
 
   // Step 1: Draw Background Layer (Image, Gradient, or Solid Color)
   if (bgImageObj && bgImageData) {
-    // Aspect-Ratio Cover math
     const imgRatio = bgImageObj.naturalWidth / bgImageObj.naturalHeight;
     const canvasRatio = targetWidth / targetHeight;
     let sw, sh, sx, sy;
@@ -809,14 +775,12 @@ async function generateHighResCanvas() {
     ctx.drawImage(bgImageObj, sx, sy, sw, sh, 0, 0, targetWidth, targetHeight);
     ctx.filter = "none";
 
-    // Overlay Tint
     const overlayAlpha = Number(bgOverlay.value) / 100;
     if (overlayAlpha > 0) {
       ctx.fillStyle = `rgba(0, 0, 0, ${overlayAlpha})`;
       ctx.fillRect(0, 0, targetWidth, targetHeight);
     }
   } else if (currentGradient !== "none" && gradientCSS[currentGradient]) {
-    // Draw CSS-equivalent Linear Gradient on Canvas
     const grad = ctx.createLinearGradient(0, 0, targetWidth, targetHeight);
     if (currentGradient === "sunset") {
       grad.addColorStop(0, "#f093fb"); grad.addColorStop(1, "#f5576c");
@@ -834,7 +798,6 @@ async function generateHighResCanvas() {
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, targetWidth, targetHeight);
   } else {
-    // Solid background color
     ctx.fillStyle = normalizeColor(bg.value) || "#ffffff";
     ctx.fillRect(0, 0, targetWidth, targetHeight);
   }
@@ -874,7 +837,6 @@ async function downloadPNG() {
 
       const file = new File([blob], filename, { type: "image/png" });
 
-      // 1. Try Native Mobile Web Share API (Primary solution for iPhones & Android)
       if (isMobile && navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
           await navigator.share({
@@ -892,13 +854,11 @@ async function downloadPNG() {
         }
       }
 
-      // 2. For iOS Safari fallback, open Save Modal (Allows Tap & Hold -> "Save to Photos")
       if (isIOS) {
         openSaveModal(blob, filename);
         return;
       }
 
-      // 3. For Desktop & Chrome/Firefox, trigger standard automatic download
       const blobUrl = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.download = filename;
@@ -1001,7 +961,7 @@ modalCopyBtn.onclick = () => {
 };
 
 /*
- * Copy Post Caption Text (Strips tags for a clean Facebook caption)
+ * Copy Post Caption Text
  */
 copyCaption.onclick = () => {
   const raw = text.value;
@@ -1010,7 +970,6 @@ copyCaption.onclick = () => {
     return;
   }
 
-  // Clean tags: [red]Text[/red] -> Text
   const clean = raw.replace(/\[\/?.*?\]/g, "");
 
   if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -1029,7 +988,7 @@ copyCaption.onclick = () => {
 };
 
 /*
- * LocalStorage Auto-Save & Drafts System (Simple & Zero Database)
+ * LocalStorage Auto-Save & Drafts System
  */
 const STORAGE_CURRENT_KEY = "fb_post_current_draft";
 const STORAGE_DRAFTS_KEY = "fb_post_saved_drafts";
@@ -1161,20 +1120,14 @@ draftsSelect.onchange = () => {
 function init() {
   loadSavedDraftsList();
 
-  // Clear initial text box per user request
   text.value = "";
-
-  // Set "Default / Blank (White background)" template as default
   templateSelect.value = "blank";
-
-  // Default background white & solid gradient
   bg.value = "#ffffff";
   currentGradient = "none";
   document.querySelectorAll(".gradBtn").forEach(b => {
     b.classList.toggle("active", b.dataset.grad === "none");
   });
 
-  // Watermark bottom-center initially
   watermarkPosition.value = "bottom-center";
 
   render();
