@@ -3,8 +3,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Facebook Post Generator v11</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Facebook Post Generator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -16,12 +16,51 @@
 
 <body>
   <main class="app">
-    <section class="controls">
-      <h1>Facebook Post Generator</h1>
-      <p>Use <b>[red]</b>, <b>[green]</b>, <b>[blue]</b>, etc. to color text.</p>
+    <section class="controls" id="controlsSection">
+      <div class="appHeader">
+        <h1>Facebook Post Generator</h1>
+        <p class="subtitle">Create professional Facebook posts with Sinhala &amp; English typography.</p>
+      </div>
 
-      <label for="text">Post text</label>
-      <textarea id="text" spellcheck="false"></textarea>
+      <!-- Quick Template Selector -->
+      <div class="templateBox">
+        <label for="templateSelect">⚡ Professional Post Templates</label>
+        <select id="templateSelect">
+          <option value="blank" selected>Default / Blank (White background)</option>
+          <option value="announcement">📢 Official Announcement (නිල නිවේදනයයි)</option>
+          <option value="breaking">🚨 Breaking News (විශේෂ පුවත් වාර්තාව)</option>
+          <option value="editorial">❝ Expert Quote / Opinion (විශේෂඥ අදහස්)</option>
+          <option value="market">📈 Market &amp; Business (ව්‍යාපාරික පුවත්)</option>
+          <option value="advisory">🛡️ Public Advisory (මහජන දැනුවත් කිරීම)</option>
+        </select>
+      </div>
+
+      <!-- Quick Formatting Toolbar -->
+      <div class="toolbarHeader">
+        <label for="text">Post text</label>
+        <span class="charCounter" id="charCount">0 characters</span>
+      </div>
+      <div class="quickToolbar">
+        <button type="button" class="tagBtn tagRed" data-tag="red" title="Red text">🔴 Red</button>
+        <button type="button" class="tagBtn tagGreen" data-tag="green" title="Green text">🟢 Green</button>
+        <button type="button" class="tagBtn tagOrange" data-tag="#ff9800" title="Orange text">🟠 Orange</button>
+        <button type="button" class="tagBtn tagBlue" data-tag="blue" title="Blue text">🔵 Blue</button>
+        <button type="button" class="tagBtn tagBold" data-tag="bold" title="Bold text">𝐁 Bold</button>
+        <button type="button" class="tagBtn tagItalic" data-tag="italic" title="Italic text">𝘐 Italic</button>
+        <button type="button" class="tagBtn tagUnderline" data-tag="underline" title="Underline text">U̲ Line</button>
+        <div class="emojiBar">
+          <button type="button" class="emojiBtn" data-emoji="🚨" title="Alert">🚨</button>
+          <button type="button" class="emojiBtn" data-emoji="📢" title="Announcement">📢</button>
+          <button type="button" class="emojiBtn" data-emoji="💡" title="Insight">💡</button>
+          <button type="button" class="emojiBtn" data-emoji="🇱🇰" title="Sri Lanka">🇱🇰</button>
+          <button type="button" class="emojiBtn" data-emoji="📈" title="Growth">📈</button>
+          <button type="button" class="emojiBtn" data-emoji="🛡️" title="Security">🛡️</button>
+          <button type="button" class="emojiBtn" data-emoji="👇" title="Down pointer">👇</button>
+          <button type="button" class="emojiBtn" data-emoji="🔥" title="Trending">🔥</button>
+        </div>
+      </div>
+
+      <textarea id="text" spellcheck="false" placeholder="Type or paste your post text here..."></textarea>
 
       <div class="grid">
         <div>
@@ -63,6 +102,7 @@
       <select id="postSize">
         <option value="1080x1080">Square — 1080 × 1080 (1:1)</option>
         <option value="1080x1350">Portrait — 1080 × 1350 (4:5)</option>
+        <option value="1080x1920">Story / Reel — 1080 × 1920 (9:16)</option>
         <option value="1200x630">Landscape — 1200 × 630 (1.91:1)</option>
         <option value="1200x1200">Large Square — 1200 × 1200 (1:1)</option>
         <option value="custom">Custom size…</option>
@@ -81,18 +121,112 @@
 
       <div class="grid">
         <div>
-          <label for="red">Default red</label>
+          <label for="red">Highlight color ([red])</label>
           <input id="red" type="color" value="#e53935">
         </div>
         <div>
-          <label for="black">Default text</label>
+          <label for="black">Default text color</label>
           <input id="black" type="color" value="#111111">
         </div>
       </div>
 
-      <label for="bg">Background</label>
-      <input id="bg" type="color" value="#ffffff">
+      <!-- Enhanced Background Section -->
+      <div class="bgSection">
+        <label for="bg">Background color</label>
+        <div class="bgRow">
+          <input id="bg" type="color" value="#ffffff">
+          <div class="gradientPresets">
+            <button type="button" class="gradBtn active" data-grad="none" title="Solid Color">
+              <span class="swatch swatchSolid"></span>Solid
+            </button>
+            <button type="button" class="gradBtn" data-grad="sunset" title="Sunset Gradient">
+              <span class="swatch swatchSunset"></span>Sunset
+            </button>
+            <button type="button" class="gradBtn" data-grad="ocean" title="Ocean Blue Gradient">
+              <span class="swatch swatchOcean"></span>Ocean
+            </button>
+            <button type="button" class="gradBtn" data-grad="dark" title="Dark Slate Gradient">
+              <span class="swatch swatchDark"></span>Dark
+            </button>
+            <button type="button" class="gradBtn" data-grad="crimson" title="Crimson Gradient">
+              <span class="swatch swatchCrimson"></span>Crimson
+            </button>
+            <button type="button" class="gradBtn" data-grad="emerald" title="Emerald Green Gradient">
+              <span class="swatch swatchEmerald"></span>Emerald
+            </button>
+            <button type="button" class="gradBtn" data-grad="midnight" title="Midnight Gradient">
+              <span class="swatch swatchMidnight"></span>Midnight
+            </button>
+          </div>
+        </div>
 
+        <div class="photoBgBox">
+          <label>Photo background (optional)</label>
+          <div class="fileInputRow">
+            <label for="bgImageInput" class="customFileBtn">📷 Choose Photo</label>
+            <input id="bgImageInput" type="file" accept="image/*" class="fileInputHidden">
+            <span id="bgImageName" class="fileUploadStatus">No photo chosen</span>
+            <button type="button" id="removeBgImage" class="removeBtn hidden">Remove</button>
+          </div>
+          <div id="photoControls" class="grid photoControls hidden">
+            <div>
+              <label for="bgOverlay">Dark tint <span id="bgOverlayOut">50%</span></label>
+              <input id="bgOverlay" type="range" min="0" max="90" value="50">
+            </div>
+            <div>
+              <label for="bgBlur">Blur <span id="bgBlurOut">0px</span></label>
+              <input id="bgBlur" type="range" min="0" max="15" value="0">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Page Branding Box -->
+      <div class="brandingBox">
+        <div class="brandingHeader">
+          <label class="brandingToggle">
+            <input id="brandingEnabled" type="checkbox"> Add Page Branding / Header
+          </label>
+        </div>
+        <div id="brandingFields" class="hidden">
+          <div class="grid">
+            <div>
+              <label for="brandNameInput">Page Name</label>
+              <input id="brandNameInput" type="text" placeholder="e.g. Daily News Sri Lanka" maxlength="60">
+            </div>
+            <div>
+              <label for="brandHandleInput">Handle / Subtitle</label>
+              <input id="brandHandleInput" type="text" placeholder="e.g. @dailynews • Just now" maxlength="60">
+            </div>
+          </div>
+          <div class="grid brandOptionsGrid">
+            <div>
+              <label>Logo / Avatar</label>
+              <div class="fileInputRow">
+                <label for="brandAvatarInput" class="customFileBtn">Upload Logo</label>
+                <input id="brandAvatarInput" type="file" accept="image/*" class="fileInputHidden">
+                <img id="brandAvatarThumb" class="brandAvatarThumb hidden" alt="Logo preview">
+                <button type="button" id="removeBrandAvatar" class="removeBtn hidden">Remove</button>
+              </div>
+            </div>
+            <div>
+              <label for="brandTextColor">Brand text color</label>
+              <select id="brandTextColor">
+                <option value="auto">Auto Contrast</option>
+                <option value="#ffffff">White text</option>
+                <option value="#0f172a">Dark text</option>
+                <option value="#1877f2">Facebook Blue</option>
+              </select>
+            </div>
+          </div>
+          <div class="brandCheckboxRow">
+            <label><input id="brandVerified" type="checkbox" checked> Blue Verified Badge</label>
+            <label><input id="brandPositionBottom" type="checkbox"> Place at bottom</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Watermark Box -->
       <div class="watermarkBox">
         <div class="watermarkHeader">
           <label class="watermarkToggle"><input id="watermarkEnabled" type="checkbox" checked> Add watermark</label>
@@ -106,12 +240,12 @@
           <div>
             <label for="watermarkPosition">Position</label>
             <select id="watermarkPosition">
+              <option value="bottom-center" selected>Bottom center</option>
               <option value="bottom-right">Bottom right</option>
               <option value="bottom-left">Bottom left</option>
               <option value="top-right">Top right</option>
               <option value="top-left">Top left</option>
               <option value="top-center">Top center</option>
-              <option value="bottom-center">Bottom center</option>
               <option value="center">Center</option>
             </select>
           </div>
@@ -126,10 +260,21 @@
         </div>
       </div>
 
+      <!-- Action Buttons -->
       <div class="buttons">
-        <button id="example">Load Example</button>
-        <button id="clear">Clear</button>
-        <button id="download" class="primary">Download PNG</button>
+        <button id="example" type="button">Load Example</button>
+        <button id="clear" type="button">Clear</button>
+        <button id="copyCaption" type="button">📝 Copy Text</button>
+        <button id="copyImage" type="button">📋 Copy Image</button>
+        <button id="download" class="primary" type="button">⬇️ Save / Download Image</button>
+      </div>
+
+      <!-- Drafts & History Bar -->
+      <div class="draftsBar">
+        <button type="button" id="saveDraftBtn">💾 Save Draft</button>
+        <select id="draftsSelect">
+          <option value="">📂 Load Saved Draft…</option>
+        </select>
       </div>
 
       <div class="help">
@@ -138,25 +283,76 @@
         <code>[green]Green[/green]</code>
         <code>[#ff6600]Orange[/#ff6600]</code><br>
         You can also use <code>[color=#7b1fa2]Purple[/color]</code>.<br>
-        Invalid colors automatically use the default red.<br><br>
+        Invalid colors automatically use the highlight color.<br><br>
         Other formatting: <code>[bold]Bold[/bold]</code>,
         <code>[italic]Italic[/italic]</code>,
         <code>[underline]Underline[/underline]</code>.<br>
         These tags can be combined, so different parts of the same line can have different formatting.<br><br>
-        <b>Fonts:</b> Choose a Sinhala-capable font or an English font with Sinhala fallback.<br><br><b>Automatic font
-          sizing:</b> the selected size is the maximum.
-        If the text is too long, the app automatically reduces the font until everything fits.
+        <b>Fonts:</b> Choose a Sinhala-capable font or an English font with Sinhala fallback.<br><br>
+        <b>Automatic font sizing:</b> The selected size is the maximum. If the text is too long, the font automatically scales down to fit.
       </div>
     </section>
 
-    <section class="previewWrap">
+    <!-- Preview Section -->
+    <section class="previewWrap" id="previewSection">
       <div class="label" id="previewLabel">1080 × 1080 PREVIEW</div>
       <div id="post">
+        <div id="postBgLayer" class="postBgLayer"></div>
+        <div id="postOverlayLayer" class="postOverlayLayer"></div>
+        
+        <div id="branding" class="branding hidden">
+          <img id="brandingAvatar" class="brandingAvatar hidden" alt="Page Logo">
+          <div class="brandingInfo">
+            <div class="brandingNameRow">
+              <span id="brandingName" class="brandingName"></span>
+              <svg id="brandingBadge" class="brandingBadge" viewBox="0 0 24 24" fill="#1877f2" aria-label="Verified">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.8 14.2l-3.5-3.5 1.4-1.4 2.1 2.1 5.9-5.9 1.4 1.4-7.3 7.3z"/>
+              </svg>
+            </div>
+            <div id="brandingHandle" class="brandingHandle"></div>
+          </div>
+        </div>
+
         <div id="preview"></div>
-        <div id="watermark" class="watermark bottom-right" aria-hidden="true"></div>
+        <div id="watermark" class="watermark bottom-center" aria-hidden="true"></div>
       </div>
     </section>
   </main>
+
+  <!-- Mobile Sticky Navigation Bar -->
+  <div class="mobileStickyBar" id="mobileStickyBar">
+    <button type="button" id="mobileTabEditor" class="active">✏️ Edit</button>
+    <button type="button" id="mobileTabPreview">👁️ Preview</button>
+    <button type="button" id="mobileSaveBtn" class="primary">⬇️ Save</button>
+  </div>
+
+  <!-- Save / Share Modal (Mobile & iPhone Support) -->
+  <div id="saveModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modalBackdrop" id="modalBackdrop"></div>
+    <div class="modalContent">
+      <div class="modalHeader">
+        <h3 id="modalTitle">Your Post is Ready!</h3>
+        <button type="button" id="modalClose" class="modalCloseBtn" aria-label="Close">&times;</button>
+      </div>
+      <div class="modalBody">
+        <div class="iosTip" id="iosTip">
+          <b>📱 iPhone users:</b> Tap &amp; hold the image below, then choose <b>"Save to Photos"</b> or <b>"Share"</b>.
+        </div>
+        <div class="modalImageWrap">
+          <img id="modalImage" alt="Generated Facebook Post">
+        </div>
+      </div>
+      <div class="modalFooter">
+        <button type="button" id="modalDownloadBtn" class="primary">Direct Download</button>
+        <button type="button" id="modalCopyBtn">📋 Copy Image</button>
+        <button type="button" id="modalDoneBtn">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Feedback -->
+  <div id="toast" class="toast hidden"></div>
+
   <script src="script.js"></script>
 </body>
 
